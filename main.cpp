@@ -1,40 +1,63 @@
-#include <GL/glut.h> /* glut graphics library */
+#include <GL/glut.h>
 #include <cmath>
 #include <fstream>
 #include <iostream>
 #include <vector>
 
 
-#define TICK_TIME 10
+#include "bird.hpp"
+#include "generator.hpp"
+#include "map.hpp"
 
-double vertSpeed       = 6;
-double speed           = 0;
-double y_pos           = 0.0;
-double fallingConstant = 20;
+#define FPS 69
+#define TICK_TIME (1000 / FPS)
 
-bool tapped = false;
+bool tapped  = false;
+bool pause   = false;
+bool restart = false;
+
+Bird mainBird (0, 0, 0, 6, 2, 0, 0.3, 0.01, 0.01);
+Generator gen;
+Map map (mainBird, gen, TICK_TIME);
 
 void keyboardHandler (unsigned char key, int x, int y);
-void updatePosition (int lol);
 void display ();
 
 
 void keyboardHandler (unsigned char key, int x, int y) {
-    tapped = true;
+    if (!map.bird.isAlive () && key == 'r')
+        restart = true;
+    else if (key == 'p') {
+        pause = !pause;
+    } else
+        tapped = true;
 }
 
-void updatePosition (int lol) {
-    if (tapped) {
-        tapped = false;
-        speed  = vertSpeed;
-    }
-    y_pos += speed * TICK_TIME / 1000;
-    speed -= fallingConstant * TICK_TIME / 1000;
+void update (int lol) {
+    std::cout << map.overcame_pylons << std::endl;
 
+    if (restart) {
+        map.bird = Bird (0, 0, 0, 6, 2, 0, 0.3, 0.01, 0.01);
+        ;
+        map.gen.clear ();
+        restart = false;
+    }
+
+
+    if (map.bird.isAlive ()) {
+
+        if (!pause) {
+            if (tapped) {
+                map.bird.jump ();
+                tapped = false;
+            }
+            map.update ();
+        }
+    }
 
     display ();
 
-    glutTimerFunc (TICK_TIME, updatePosition, 0);
+    glutTimerFunc (TICK_TIME, update, 0);
 }
 
 void display () {
@@ -43,16 +66,7 @@ void display () {
 
     glLoadIdentity ();
 
-    glTranslatef (0, y_pos, 0);
-
-    glColor3f (1.0, 1.0, 0.0);
-
-    glBegin (GL_QUADS);
-    glVertex3f (-0.05, -0.05, 0);
-    glVertex3f (-0.05, 0.05, 0);
-    glVertex3f (0.05, 0.05, 0);
-    glVertex3f (0.05, -0.05, 0);
-    glEnd ();
+    map.draw ();
 
     glutSwapBuffers ();
 }
@@ -61,13 +75,13 @@ int main (int argc, char** argv) {
     glutInit (&argc, argv);
     glutInitWindowPosition (0, 0);
     glutInitWindowSize (800, 800);
-    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
+    glutInitDisplayMode (GLUT_RGB);
 
     glutCreateWindow ("Floppy birb");
 
     glutDisplayFunc (display);
     glutKeyboardUpFunc (keyboardHandler);
-    glutTimerFunc (TICK_TIME, updatePosition, 0);
+    glutTimerFunc (TICK_TIME, update, 0);
 
     glutMainLoop ();
 
