@@ -1,9 +1,9 @@
 #include <GL/glut.h>
 #include <cmath>
+#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <vector>
-
 
 #include "bird.hpp"
 #include "generator.hpp"
@@ -34,11 +34,9 @@ void keyboardHandler (unsigned char key, int x, int y) {
 }
 
 void update (int lol) {
-    std::cout << map.overcame_pylons << std::endl;
-
     if (restart) {
-        map.bird = Bird (0, 0, 0, 6, 2, 0, 0.3, 0.01, 0.01);
-        ;
+        map.overcame_pylons = 0;
+        map.bird            = Bird (0, 0, 0, 6, 2, 0, 0.3, 0.01, 0.01);
         map.gen.clear ();
         restart = false;
     }
@@ -72,6 +70,8 @@ void display () {
 }
 
 int main (int argc, char** argv) {
+    srand (time (0));
+
     glutInit (&argc, argv);
     glutInitWindowPosition (0, 0);
     glutInitWindowSize (800, 800);

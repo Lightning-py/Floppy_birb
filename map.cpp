@@ -24,7 +24,7 @@ void Map::update () {
 
     checkHitboxes ();
 
-    gen.generate_new_pylons ();
+    gen.generate_new_pylons (this->overcame_pylons);
 }
 
 
@@ -50,7 +50,7 @@ void Map::checkHitboxes () {
         if (this->bird.lives > 0) {
             this->bird.respawn ();
             this->gen.clear ();
-            this->gen.generate_new_pylons ();
+            this->gen.generate_new_pylons (this->overcame_pylons);
 
             this->stop (69);
         }
@@ -60,6 +60,8 @@ void Map::checkHitboxes () {
 
     for (int i = 0; i < this->gen.getObstacles ().size (); ++i) {
         Pylon obstacle = gen.getObstacles ()[i];
+
+        Pylon* obstacle_ptr = &(gen.getObstacles ()[i]);
 
         double pylon_pos_center_x = obstacle.getXPos ();
 
@@ -79,11 +81,20 @@ void Map::checkHitboxes () {
         //               << obstacle_1.isOvercome () << std::endl;
         // }
 
+        // for (int i = 0; i < gen.getObstacles ().size (); ++i) {
+        //     if (gen.getObstacles ()[i].overcome == true) {
+        //         std::cout << gen.getObstacles ()[i].getXPos () << std::endl;
+        //     }
+        // }
+
         if (obstacle.overcome == false) { // если еще не преодолевали эту колонну
             if (pylon_pos_center_x <= 0) { // если преодолели ее сейчас
                 obstacle.overcome = true;
-                std::cout << obstacle.getXPos () << " "
-                          << obstacle.isOvercome () << std::endl;
+                gen.setObstacle (i, obstacle);
+                // gen.getObstacles ()[i].overcome = true;
+                // std::cout << gen.getObstacles ()[i].getXPos () << std::endl;
+                // std::cout << obstacle.getXPos () << " "
+                //           << obstacle.isOvercome () << std::endl;
                 this->overcame_pylons++;
             }
         }
@@ -99,7 +110,7 @@ void Map::checkHitboxes () {
             if (this->bird.lives > 0) {
                 this->bird.respawn ();
                 this->gen.clear ();
-                this->gen.generate_new_pylons ();
+                this->gen.generate_new_pylons (this->overcame_pylons);
 
                 this->stop (69);
             }

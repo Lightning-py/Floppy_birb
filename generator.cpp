@@ -1,6 +1,9 @@
+#include <algorithm>
+#include <iostream>
+
 #include "generator.hpp"
 
-void Generator::generate_new_pylons () {
+void Generator::generate_new_pylons (unsigned int pylons_overcame) {
     double x_start_pos = 0.7;
     double interval    = 0.3;
 
@@ -12,7 +15,27 @@ void Generator::generate_new_pylons () {
     int pylons_to_gen = 20 - this->obstacles.size ();
 
     for (int i = 0; i < pylons_to_gen; ++i) {
-        obstacles.push_back (Pylon{ x_start_pos + i * interval, -0.1, 0.8, 0.1 });
+        double space_size =
+        0.6; // пока что так, потом можно изменять в зависимости от количества пройденных препятствий
+
+        int lower_bound = (space_size) * 100;
+        int upper_bound = (2 - space_size) * 100;
+
+        double first =
+        (double (rand () % (upper_bound - lower_bound) + lower_bound)) / 100 - 1;
+        double second = 0.0;
+
+        if (first + space_size >= 1.8) {
+            second = first - space_size;
+            std::swap (first, second);
+        } else
+            second = first + space_size;
+
+        Pylon obstacle{ x_start_pos + i * interval, first, second, 0.1, space_size };
+
+        obstacle.setRandomColors ();
+
+        obstacles.push_back (obstacle);
     }
 }
 
@@ -41,4 +64,11 @@ void Generator::shift_left_all (double pos) {
 }
 
 
-std::deque<Pylon> Generator::getObstacles () { return this->obstacles; }
+std::deque<Pylon> Generator::getObstacles () {
+    return this->obstacles;
+}
+
+
+void Generator::setObstacle (int pos, Pylon& pylon) {
+    this->obstacles[pos] = pylon;
+}

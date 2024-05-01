@@ -99,3 +99,20 @@ bool Pylon::isOvercome () {
 void Pylon::setOvercome () {
     this->overcome = true;
 }
+
+
+void Pylon::setRandomColors () {
+    std::vector<double> color_1 = { (double (rand () % (100)) / 100),
+        (double (rand () % (100)) / 100), (double (rand () % (100)) / 100) };
+
+    std::vector<double> color_2 = { (double (rand () % (100)) / 100),
+        (double (rand () % (100)) / 100), (double (rand () % (100)) / 100) };
+
+    std::vector<double> color_3 = { (double (rand () % (100)) / 100),
+        (double (rand () % (100)) / 100), (double (rand () % (100)) / 100) };
+
+    std::vector<double> color_4 = { (double (rand () % (100)) / 100),
+        (double (rand () % (100)) / 100), (double (rand () % (100)) / 100) };
+
+    this->setFourColors (color_1, color_2, color_3, color_4);
+}
