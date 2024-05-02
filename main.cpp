@@ -16,7 +16,12 @@ bool tapped  = false;
 bool pause   = false;
 bool restart = false;
 
-Bird mainBird (0, 0, 0, 6, 2, 0, 0.3, 0.01, 0.01);
+
+double fallingConstant = 6;
+double vertSpeed       = 2;
+
+
+Bird mainBird (0, 0, 0, fallingConstant, vertSpeed, 0, 0.3, 0.01, 0.01);
 Generator gen;
 Map map (mainBird, gen, TICK_TIME);
 
