@@ -29,3 +29,25 @@ std::vector<float> randColorf () {
         randFloat (0.0, 1.0, 100), randFloat (0.0, 1.0, 100) };
     return result;
 }
+
+int randomChoice (int number, std::vector<int> chances) {
+    int sum = 0;
+    for (int i : chances)
+        sum += i;
+
+    if (sum != 100)
+        throw "invalid chances";
+
+    std::vector<int> numbers (100);
+
+    int counter = 1;
+
+    for (int i = 0; i < number; ++i) {
+        for (int j = 0; j < chances[i]; ++j) {
+            numbers[counter] = i;
+            counter++;
+        }
+    }
+
+    return numbers[randInt (0, 100)];
+}

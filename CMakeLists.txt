@@ -5,7 +5,7 @@ project(FlappyBird VERSION 0.1.0 LANGUAGES CXX)
 set(HEADERS headers)
 set(SOURCES sources)
 
-set(SOURCE_FILES ${SOURCES}/bird.cpp ${SOURCES}/generator.cpp ${SOURCES}/map.cpp ${SOURCES}/pylon.cpp)
+set(SOURCE_FILES ${SOURCES}/bird.cpp ${SOURCES}/generator.cpp ${SOURCES}/map.cpp ${SOURCES}/pylon.cpp ${SOURCES}/bonus.cpp)
 
 include_directories(${HEADERS})
 

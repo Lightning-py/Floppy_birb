@@ -61,7 +61,6 @@ void Pylon::draw () {
 
     glLoadIdentity ();
 
-    glTranslatef (getXPos (), 0.0, 0.0);
 
     glTranslatef (this->x_pos, 0, 0); // перемещение в точку расположения нижней колонны
 

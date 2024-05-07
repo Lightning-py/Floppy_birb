@@ -38,6 +38,7 @@ void keyboardHandler (unsigned char key, int x, int y) {
         tapped = true;
 }
 
+
 void update (int lol) {
     if (restart) {
         map.overcame_pylons = 0;
