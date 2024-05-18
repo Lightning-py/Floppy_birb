@@ -43,4 +43,6 @@ class Bonus { // класс бонуса
     void shift_left (double pos);
     double getXPos ();
     double getYPos ();
+    double getWidth ();
+    double getHeight ();
 };

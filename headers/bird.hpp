@@ -3,6 +3,8 @@
 #include <GL/glut.h>
 #include <iostream>
 
+#include "grid.hpp"
+
 class Bird {
     private:
     double x_pos;           // позиция по X
@@ -12,17 +14,15 @@ class Bird {
     double fallingConstant; // константа g
     double rotation;        // угол поворота птицы
     double vertSpeed;       // скорость прыжка
+    double default_size;
+
 
     bool alive; // жива ли птица
 
     public:
-    double x_hibox;  // координаты хитбокса по X
-    double y_hitbox; // координаты хитбокса по Y
-
-    double x_size; // размеры по x (для бонусов на размер)
-    double y_size; // размеры по y (для того же самого)
-
     int lives; // количество оставшихся жизней
+
+    Grid grid;
 
     Bird () { // конструктор по умолчанию
     }
@@ -34,8 +34,7 @@ class Bird {
     double vertSpeed,
     double rotation,
     double x_speed,
-    double x_hibox,
-    double y_hitbox) {
+    Grid grid) {
         this->x_pos           = x_pos;
         this->y_pos           = y_pos;
         this->speed           = speed;
@@ -44,11 +43,12 @@ class Bird {
         this->vertSpeed       = vertSpeed;
         this->rotation        = rotation;
         this->x_speed         = x_speed;
-        this->x_hibox         = x_hibox;
-        this->y_hitbox        = y_hitbox;
 
+        this->grid = grid;
 
-        this->lives = 3;
+        this->lives = 1;
+
+        this->default_size = this->grid.getSquareSize ();
     }
 
     double getFallingConstant (); // получает константу g
@@ -73,4 +73,15 @@ class Bird {
     void respawn ();
 
     void draw (); // отрисовка птички (изменить для изменения дизайна птицы)
+
+    void make_bigger (double multiplier);
+    void make_smaller (double multiplier);
+
+    void make_x_speed_bigger (double multiplier);
+
+    void set_default_size ();
+
+    void heal ();
+
+    double getSize ();
 };

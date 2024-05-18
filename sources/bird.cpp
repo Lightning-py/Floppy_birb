@@ -9,6 +9,10 @@ double Bird::getXSpeed () {
     return this->x_speed;
 }
 
+void Bird::make_x_speed_bigger (double multiplier) {
+    this->x_speed *= multiplier;
+}
+
 
 double Bird::getSpeed () {
     return this->speed;
@@ -77,13 +81,13 @@ void Bird::jump () {
 }
 
 void Bird::draw () {
-    glTranslated (0.0, getYPos (), 0);
+    // glTranslated (0.0, getYPos (), 0);
+    // glRotated (this->rotation, 0.0, 0.0, 1.0);
 
-    glRotated (this->rotation, 0.0, 0.0, 1.0);
-
-    drawLowerHalfCircle (0, 0, 0.05, 1.0, 1.0, 0.0);
-    drawLowerHalfCircle (0, 0, 0.02, 0.0, 1.0, 0.0);
-    drawRightHalfCircle (0.03, 0.03, 0.03, 1.0, 1.0, 0.0);
+    // drawLowerHalfCircle (0, 0, 0.05, 1.0, 1.0, 0.0);
+    // drawLowerHalfCircle (0, 0, 0.02, 0.0, 1.0, 0.0);
+    // drawRightHalfCircle (0.03, 0.03, 0.03, 1.0, 1.0, 0.0);
+    this->grid.drawInPosition (std::make_pair (this->getXPos (), this->getYPos ()));
 }
 
 void Bird::kill () {
@@ -98,4 +102,25 @@ void Bird::respawn () {
     this->setSpeed (0.0);
     this->setYPos (0.0);
     this->setXPos (0.0);
+}
+
+void Bird::make_smaller (double multiplier) {
+    this->grid.setSquareSize (this->grid.getSquareSize () / multiplier);
+}
+
+void Bird::make_bigger (double multiplier) {
+    this->grid.setSquareSize (this->grid.getSquareSize () * multiplier);
+}
+
+void Bird::set_default_size () {
+    this->grid.setSquareSize (this->default_size);
+}
+
+void Bird::heal () {
+    if (this->lives < 6)
+        this->lives++;
+}
+
+double Bird::getSize () {
+    return this->grid.getWidth () * this->grid.getSquareSize ();
 }

@@ -45,7 +45,7 @@ class Pylon { // класс препятствия (колонны)
     void setOvercome (); // обновление статуса преодоления колонны
     double getXPos (); // методя для получения поля x_pos
     void loadDefaultColor (); // загрузить изначальный цвет колонны
-    void setOneColor (std::vector<double>& color); // задать всем вершинам колонны один и тот же цвет
+    void setOneColor (std::vector<double> color); // задать всем вершинам колонны один и тот же цвет
 
     void setRandomColors (); // задать рандомные цвета
 
@@ -65,4 +65,8 @@ class Pylon { // класс препятствия (колонны)
 
     void draw (); // отрисовка конкретной колонны
     void shift_left (double pos); // смещение левее экземпляра колонны
+
+    void make_space_bigger (double space_change);
+    void make_space_smaller (double space_change, double bird_size);
+    void set_default_space_size (double space_size);
 };

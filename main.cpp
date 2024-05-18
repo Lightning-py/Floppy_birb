@@ -8,6 +8,7 @@
 #include "bird.hpp"
 #include "generator.hpp"
 #include "map.hpp"
+#include "texture.hpp"
 
 #define FPS 69
 #define TICK_TIME (1000 / FPS)
@@ -20,8 +21,10 @@ bool restart = false;
 double fallingConstant = 6;
 double vertSpeed       = 2;
 
+double start_bird_grid_square_size = 0.01;
+Grid grid ("bird.txt", start_bird_grid_square_size);
 
-Bird mainBird (0, 0, 0, fallingConstant, vertSpeed, 0, 0.3, 0.01, 0.01);
+Bird mainBird (0, 0, 0, fallingConstant, vertSpeed, 0, 0.3, grid);
 Generator gen;
 Map map (mainBird, gen, TICK_TIME);
 
@@ -42,7 +45,7 @@ void keyboardHandler (unsigned char key, int x, int y) {
 void update (int lol) {
     if (restart) {
         map.overcame_pylons = 0;
-        map.bird            = Bird (0, 0, 0, 6, 2, 0, 0.3, 0.01, 0.01);
+        map.bird            = Bird (0, 0, 0, 6, 2, 0, 0.3, grid);
         map.gen.clear ();
         restart = false;
     }

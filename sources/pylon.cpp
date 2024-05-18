@@ -1,24 +1,34 @@
 #include "pylon.hpp"
 #include "randomUtils.hpp"
 
+#include <iostream>
+
 double Pylon::getXPos () {
     return this->x_pos;
 }
 
 void Pylon::loadDefaultColor () {
-    std::vector<double> color = { 1.0f, 1.0f, 0 };
-    first_vertex_color        = color;
-    second_vertex_color       = color;
-    third_vertex_color        = color;
-    fourth_vertex_color       = color;
+    std::vector<double> color  = { 1.0f, 1.0f, 0.0f };
+    this->first_vertex_color   = color;
+    this->second_vertex_color  = color;
+    this->third_vertex_color   = color;
+    this->fourth_vertex_color  = color;
+    this->fith_vertex_color    = color;
+    this->sixth_vertex_color   = color;
+    this->seventh_vertex_color = color;
+    this->eighth_vertex_color  = color;
 }
 
-void Pylon::setOneColor (std::vector<double>& color) // применяет один цвет ко всем вершинам
+void Pylon::setOneColor (std::vector<double> color) // применяет один цвет ко всем вершинам
 {
-    this->first_vertex_color  = color;
-    this->second_vertex_color = color;
-    this->third_vertex_color  = color;
-    this->fourth_vertex_color = color;
+    this->first_vertex_color   = color;
+    this->second_vertex_color  = color;
+    this->third_vertex_color   = color;
+    this->fourth_vertex_color  = color;
+    this->fith_vertex_color    = color;
+    this->sixth_vertex_color   = color;
+    this->seventh_vertex_color = color;
+    this->eighth_vertex_color  = color;
 }
 
 void Pylon::setFourColors (std::vector<double>& first,
@@ -144,4 +154,37 @@ void Pylon::setRandomColors () {
 
     this->setEightColors (
     color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8);
+}
+
+void Pylon::make_space_bigger (double space_change) {
+    // попытаемся увеличить просвет с обоих сторон на 0.5 изменения просвета
+
+    if (((this->y_first_height - 0.5 * space_change) > -1) &&
+    (this->y_second_height + 0.5 * space_change) < 1) {
+        this->y_first_height  = this->y_first_height - 0.5 * space_change;
+        this->y_second_height = this->y_second_height + 0.5 * space_change;
+    } else if ((this->y_first_height - space_change) > -1) {
+        this->y_first_height = this->y_first_height - space_change;
+
+    } else if ((this->y_second_height + space_change) < 1) {
+        this->y_second_height = this->y_second_height + space_change;
+    }
+}
+
+void Pylon::make_space_smaller (double space_change, double bird_size) {
+    // если в просвет будет физически невозможно пролететь - не уменьшаем его
+    if ((this->y_second_height - this->y_first_height) < bird_size + 0.1)
+        return;
+
+    this->y_first_height += space_change * 0.5;
+    this->y_second_height -= space_change * 0.5;
+}
+
+
+void Pylon::set_default_space_size (double space_size) {
+    if (this->y_second_height - this->y_first_height == space_size)
+        return;
+
+    this->y_first_height += space_size / 2;
+    this->y_second_height -= space_size / 2;
 }

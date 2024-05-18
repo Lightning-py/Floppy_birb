@@ -35,3 +35,11 @@ void Bonus::shift_left (double pos) {
 double Bonus::getYPos () {
     return this->y_pos;
 }
+
+double Bonus::getWidth () {
+    return this->width;
+}
+
+double Bonus::getHeight () {
+    return this->height;
+}

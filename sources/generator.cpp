@@ -1,10 +1,26 @@
 #include <algorithm>
 #include <iostream>
+#include <vector>
 
 #include "generator.hpp"
 #include "randomUtils.hpp"
 
-void Generator::generate_new_pylons (unsigned int pylons_overcame) {
+std::vector<double> chooseColor (int bonus_type) {
+    switch (bonus_type) {
+    case 1: return std::vector<double>{ 1.0, 0.0, 0.0 }; break;
+    case 2: return std::vector<double>{ 0.0, 1.0, 0.0 }; break;
+    case 3: return std::vector<double>{ 0.0, 0.0, 1.0 }; break;
+    case 4: return std::vector<double>{ 1.0, 1.0, 0.0 }; break;
+    case 5: return std::vector<double>{ 0.0, 1.0, 1.0 }; break;
+    case 6: return std::vector<double>{ 1.0, 0.0, 1.0 }; break;
+    case 7: return std::vector<double>{ 0.5, 0.5, 0.5 }; break;
+    case 8: return std::vector<double>{ 0.0, 0.0, 0.0 }; break;
+    case 9: return std::vector<double>{ 0.5, 0.0, 0.5 }; break;
+    default: break;
+    }
+}
+
+void Generator::generate_new_pylons (unsigned int pylons_overcame, double space_size) {
     double x_start_pos = 0.7;
     double interval    = 0.6;
 
@@ -17,8 +33,8 @@ void Generator::generate_new_pylons (unsigned int pylons_overcame) {
     for (int i = 0; i < pylons_to_gen; ++i) {
         double pylon_x_pos = x_start_pos + i * interval;
 
-        double space_size =
-        0.6; // пока что так, потом можно изменять в зависимости от количества пройденных препятствий
+        // double space_size =
+        // 0.6; // пока что так, потом можно изменять в зависимости от количества пройденных препятствий
 
         double first  = randDouble (space_size - 1, 1 - space_size, 100);
         double second = 0.0;
@@ -31,10 +47,11 @@ void Generator::generate_new_pylons (unsigned int pylons_overcame) {
 
         Pylon obstacle{ pylon_x_pos, first, second, 0.1, space_size };
 
-        int chance = randomChoice (2, std::vector<int>{ 70, 30 });
+        // int chance = randomChoice (2, std::vector<int>{ 70, 30 });
+        int chance = 1; // для тестирования
 
         if (chance == 1) {
-            int anti_or_not = randomChoice (2, std::vector<int>{ 50, 50 });
+            int bonus_type = randInt (0, 10);
 
             double height = 0.1, width = 0.1;
 
@@ -42,10 +59,10 @@ void Generator::generate_new_pylons (unsigned int pylons_overcame) {
 
 
             this->bonuses.push_back (Bonus (pylon_x_pos, bonusYPos, width,
-            height, std::vector<double>{ 0.0, 0.0, 1.0 }, 1));
+            height, chooseColor (bonus_type), bonus_type));
         }
 
-        obstacle.setRandomColors ();
+        obstacle.loadDefaultColor ();
         obstacles.push_back (obstacle);
     }
 }
@@ -87,7 +104,49 @@ std::deque<Pylon> Generator::getObstacles () {
     return this->obstacles;
 }
 
-
 void Generator::setObstacle (int pos, Pylon& pylon) {
     this->obstacles[pos] = pylon;
+}
+
+
+std::deque<Bonus> Generator::getBonuses () {
+    return this->bonuses;
+}
+
+
+void Generator::delete_bonus () {
+    this->bonuses.pop_front ();
+}
+
+
+void Generator::make_space_size_bigger (double space_change) {
+    for (int i = 0; i < this->getObstacles ().size (); ++i) {
+        Pylon obstacle = this->obstacles[i];
+
+        obstacle.make_space_bigger (space_change);
+
+        this->obstacles[i] = obstacle;
+    }
+}
+
+
+void Generator::make_space_size_smaller (double space_change, double bird_size) {
+    for (int i = 0; i < this->getObstacles ().size (); ++i) {
+        Pylon obstacle = this->obstacles[i];
+
+        obstacle.make_space_smaller (space_change, bird_size);
+
+        this->obstacles[i] = obstacle;
+    }
+}
+
+
+void Generator::set_default_space_size () {
+    for (int i = 0; i < this->getObstacles ().size (); ++i) {
+        Pylon obstacle = this->obstacles[i];
+
+        obstacle.set_default_space_size (this->default_space);
+
+        this->obstacles[i] = obstacle;
+    }
 }
