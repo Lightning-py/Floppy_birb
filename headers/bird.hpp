@@ -1,4 +1,6 @@
-#pragma once
+#ifndef BIRD_CLASS
+#define BIRD_CLASS
+
 
 #include <GL/glut.h>
 #include <iostream>
@@ -46,7 +48,7 @@ class Bird {
 
         this->grid = grid;
 
-        this->lives = 1;
+        this->lives = 3;
 
         this->default_size = this->grid.getSquareSize ();
     }
@@ -84,4 +86,7 @@ class Bird {
     void heal ();
 
     double getSize ();
+    double getDefaultSize ();
 };
+
+#endif

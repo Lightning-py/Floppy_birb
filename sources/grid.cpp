@@ -93,3 +93,8 @@ unsigned int Grid::getWidth () {
 std::vector<std::pair<int, int>> Grid::get_grid_black () {
     return this->grid_black;
 }
+
+
+void Grid::setGridData (std::vector<std::vector<int>> grid_data) {
+    this->grid_data = grid_data;
+}

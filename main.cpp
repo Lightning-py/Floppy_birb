@@ -6,9 +6,9 @@
 #include <vector>
 
 #include "bird.hpp"
+#include "font.hpp"
 #include "generator.hpp"
 #include "map.hpp"
-#include "texture.hpp"
 
 #define FPS 69
 #define TICK_TIME (1000 / FPS)
@@ -22,21 +22,28 @@ double fallingConstant = 6;
 double vertSpeed       = 2;
 
 double start_bird_grid_square_size = 0.01;
+double start_heart_grid_size       = 0.007;
+
 Grid grid ("bird.txt", start_bird_grid_square_size);
+Grid heart_grid ("heart.txt", start_heart_grid_size);
 
 Bird mainBird (0, 0, 0, fallingConstant, vertSpeed, 0, 0.3, grid);
 Generator gen;
-Map map (mainBird, gen, TICK_TIME);
+
+Font font ("numbers.txt");
+Map map (mainBird, gen, TICK_TIME, heart_grid, font);
 
 void keyboardHandler (unsigned char key, int x, int y);
 void display ();
 
 
 void keyboardHandler (unsigned char key, int x, int y) {
-    if (!map.bird.isAlive () && key == 'r')
+    if (!map.bird.isAlive () && key == 'r') {
         restart = true;
-    else if (key == 'p') {
-        pause = !pause;
+        tapped  = false;
+    } else if (key == 'p') {
+        pause  = !pause;
+        tapped = false;
     } else
         tapped = true;
 }

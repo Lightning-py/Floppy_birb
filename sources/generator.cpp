@@ -16,13 +16,12 @@ std::vector<double> chooseColor (int bonus_type) {
     case 7: return std::vector<double>{ 0.5, 0.5, 0.5 }; break;
     case 8: return std::vector<double>{ 0.0, 0.0, 0.0 }; break;
     case 9: return std::vector<double>{ 0.5, 0.0, 0.5 }; break;
-    default: break;
     }
 }
 
 void Generator::generate_new_pylons (unsigned int pylons_overcame, double space_size) {
     double x_start_pos = 0.7;
-    double interval    = 0.6;
+    double interval    = 0.8;
 
     if (this->obstacles.size () > 0) {
         x_start_pos = this->obstacles.back ().getXPos () + interval;
@@ -47,11 +46,11 @@ void Generator::generate_new_pylons (unsigned int pylons_overcame, double space_
 
         Pylon obstacle{ pylon_x_pos, first, second, 0.1, space_size };
 
-        // int chance = randomChoice (2, std::vector<int>{ 70, 30 });
-        int chance = 1; // для тестирования
+        int chance = randomChoice (2, std::vector<int>{ 60, 40 });
+        // int chance = 1; // для тестирования
 
         if (chance == 1) {
-            int bonus_type = randInt (0, 10);
+            int bonus_type = randInt (1, 10);
 
             double height = 0.1, width = 0.1;
 

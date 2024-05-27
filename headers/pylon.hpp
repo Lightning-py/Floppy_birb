@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PYLON_CLASS
+#define PYLON_CLASS
 
 #include <GL/glut.h>
 #include <vector>
@@ -70,3 +71,5 @@ class Pylon { // класс препятствия (колонны)
     void make_space_smaller (double space_change, double bird_size);
     void set_default_space_size (double space_size);
 };
+
+#endif

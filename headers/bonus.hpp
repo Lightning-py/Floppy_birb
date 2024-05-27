@@ -1,4 +1,6 @@
-#pragma once
+#ifndef BONUS_CLASS
+#define BONUS_CLASS
+
 
 #include <GL/glut.h>
 #include <vector>
@@ -46,3 +48,6 @@ class Bonus { // класс бонуса
     double getWidth ();
     double getHeight ();
 };
+
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef GRID_CLASS
+#define GRID_CLASS
+
 #include <GL/glut.h>
 #include <fstream>
 #include <iostream>
@@ -21,6 +24,8 @@ class Grid {
     std::vector<std::vector<int>> grid_data;
     std::vector<std::pair<int, int>> grid_black;
 
+
+    void setGridData (std::vector<std::vector<int>> grid_data);
     void setSquareSize (double size);
     void setHeight (unsigned int height);
     void setWidth (unsigned int width);
@@ -34,3 +39,5 @@ class Grid {
 
     std::vector<std::pair<int, int>> get_grid_black ();
 };
+
+#endif

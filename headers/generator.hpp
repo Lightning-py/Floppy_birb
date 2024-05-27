@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GENERATOR_CLASS
+#define GENERATOR_CLASS
 
 #include <deque>
 
@@ -37,3 +38,5 @@ class Generator {
 
     void set_default_space_size ();
 };
+
+#endif

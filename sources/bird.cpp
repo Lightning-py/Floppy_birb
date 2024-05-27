@@ -1,5 +1,3 @@
-#pragma once
-
 #include "bird.hpp"
 #include "glUtils.hpp"
 #include <algorithm>
@@ -123,4 +121,9 @@ void Bird::heal () {
 
 double Bird::getSize () {
     return this->grid.getWidth () * this->grid.getSquareSize ();
+}
+
+
+double Bird::getDefaultSize () {
+    return this->default_size * this->grid.getWidth ();
 }

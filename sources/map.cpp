@@ -1,7 +1,9 @@
 #include <cmath>
 
-#include "map.hpp"
+#include <stdlib.h>
+#include <string.h>
 
+#include "map.hpp"
 
 void Map::stop (long long stop_time) { // приостановить игру на некоторое время
     this->stopped   = true;
@@ -40,6 +42,12 @@ void Map::draw () {
     glLoadIdentity ();
     if (this->isNight)
         drawNight ();
+
+    drawHearts ();
+
+    glLoadIdentity ();
+
+    drawPoints ();
 }
 
 
@@ -72,6 +80,10 @@ void Map::checkHitboxes () {
     if ((bird_pos_bottom <= -1 || bird_pos_top >= 1)) {
         this->bird.kill ();
 
+        this->setNightFalse ();
+        this->gen.set_default_space_size ();
+        this->bird.set_default_size ();
+
         if (this->bird.lives > 0) {
             this->bird.respawn ();
             this->gen.clear ();
@@ -79,6 +91,7 @@ void Map::checkHitboxes () {
 
             this->stop (69);
         }
+
 
         return;
     }
@@ -115,9 +128,9 @@ void Map::checkHitboxes () {
                 std::make_pair (bonus_top_right_angle_x, bonus_top_right_angle_y)));
 
                 if (flag) {
+
+
                     // использование бонуса
-
-
                     switch (bonus.getBonusType ()) {
                     case 1: this->bird.heal (); break;
                     case 2:
@@ -134,18 +147,15 @@ void Map::checkHitboxes () {
                         this->gen.make_space_size_smaller (
                         this->bird.getSize () * 0.5, this->bird.getSize ());
                         break;
-                    case 8: this->bird.make_x_speed_bigger (1.2);
+                    case 8: this->bird.make_x_speed_bigger (1.2); break;
                     case 9: this->setNight (); break;
 
                     default: break;
                     }
-                    // применение эффектов бонуса
+                    // удаление бонуса
                     this->gen.delete_bonus ();
                     break;
                 }
-
-
-                // удаление бонуса
             }
         }
     }
@@ -175,22 +185,6 @@ void Map::checkHitboxes () {
             }
         }
 
-        // лЕгАсИ
-        // if (((bird_pos_right >= pylon_pos_left && bird_pos_right <= pylon_pos_right) ||
-        //     (bird_pos_left >= pylon_pos_left && bird_pos_left <= pylon_pos_right)) &&
-        // (bird_pos_bottom <= pylon_bottom_top || bird_pos_top >= pylon_top_bottom)) { // проверка на наложение хитбоксов на колонну
-        //     this->bird.kill ();
-
-        //     if (this->bird.lives > 0) {
-        //         this->bird.respawn ();
-        //         this->gen.clear ();
-        //         this->gen.generate_new_pylons (this->overcame_pylons);
-
-        //         this->stop (69);
-        //     }
-
-        //     return;
-        // }
 
         if (!((pylon_pos_right < bird_pos_left) || (pylon_pos_left > bird_pos_right))) {
             for (auto pair : this->bird.grid.get_grid_black ()) {
@@ -205,9 +199,6 @@ void Map::checkHitboxes () {
                 double center_dot_y =
                 square_left_angle_y + (i + 0.5) * this->bird.grid.getSquareSize ();
 
-                // std::cout << this->bird.getXPos () << " "
-                //           << this->bird.getYPos () << " " << center_dot_x
-                //           << " " << center_dot_y << std::endl;
 
                 flag = flag |
                 is_dot_in_square (center_dot_x, center_dot_y,
@@ -247,11 +238,13 @@ void Map::checkHitboxes () {
 
 
 void Map::setNight () {
-    this->isNight = true;
+    this->isNight       = true;
+    this->font.inverted = true;
 }
 
 void Map::setNightFalse () {
-    this->isNight = false;
+    this->isNight       = false;
+    this->font.inverted = false;
 }
 
 void Map::drawNight () {
@@ -265,24 +258,26 @@ void Map::drawNight () {
 
     // полукруг
 
+    double bird_y = this->bird.getYPos ();
+
     double theta;
     double pi   = 3.14;
     double step = 0.5f;
 
-    double radius = this->bird.getSize () * 4.5;
+    double radius = this->bird.getDefaultSize () * 4.5;
 
 
     for (GLfloat a = -45.0f; a < 45.0f; a += step) {
         glBegin (GL_POLYGON);
 
         theta = -2.0f * pi * a / 180.0f;
-        glVertex3f (1.0, radius * sin (theta), 0.0);
-        glVertex3f (radius * cos (theta), radius * sin (theta), 0.0f);
+        glVertex3f (1.0, bird_y + radius * sin (theta), 0.0);
+        glVertex3f (radius * cos (theta), bird_y + radius * sin (theta), 0.0f);
 
         a += step;
         theta = -2.0f * pi * a / 180.0f;
-        glVertex3f (radius * cos (theta), radius * sin (theta), 0.0f);
-        glVertex3f (1.0, radius * sin (theta), 0.0);
+        glVertex3f (radius * cos (theta), bird_y + radius * sin (theta), 0.0f);
+        glVertex3f (1.0, bird_y + radius * sin (theta), 0.0);
 
         glEnd ();
     }
@@ -291,13 +286,13 @@ void Map::drawNight () {
         glBegin (GL_POLYGON);
 
         theta = -2.0f * pi * a / 180.0f;
-        glVertex3f (1.0, radius * sin (theta), 0.0);
-        glVertex3f (radius * cos (theta), radius * sin (theta), 0.0f);
+        glVertex3f (1.0, bird_y + radius * sin (theta), 0.0);
+        glVertex3f (radius * cos (theta), bird_y + radius * sin (theta), 0.0f);
 
         a += step;
         theta = -2.0f * pi * a / 180.0f;
-        glVertex3f (radius * cos (theta), radius * sin (theta), 0.0f);
-        glVertex3f (1.0, radius * sin (theta), 0.0);
+        glVertex3f (radius * cos (theta), bird_y + radius * sin (theta), 0.0f);
+        glVertex3f (1.0, bird_y + radius * sin (theta), 0.0);
 
         glEnd ();
     }
@@ -306,13 +301,13 @@ void Map::drawNight () {
         glBegin (GL_POLYGON);
 
         theta = -2.0f * pi * a / 180.0f;
-        glVertex3f (-1.0, radius * sin (theta), 0.0);
-        glVertex3f (radius * cos (theta), radius * sin (theta), 0.0f);
+        glVertex3f (-1.0, bird_y + radius * sin (theta), 0.0);
+        glVertex3f (radius * cos (theta), bird_y + radius * sin (theta), 0.0f);
 
         a += step;
         theta = -2.0f * pi * a / 180.0f;
-        glVertex3f (radius * cos (theta), radius * sin (theta), 0.0f);
-        glVertex3f (-1.0, radius * sin (theta), 0.0);
+        glVertex3f (radius * cos (theta), bird_y + radius * sin (theta), 0.0f);
+        glVertex3f (-1.0, bird_y + radius * sin (theta), 0.0);
 
         glEnd ();
     }
@@ -321,32 +316,56 @@ void Map::drawNight () {
         glBegin (GL_POLYGON);
 
         theta = -2.0f * pi * a / 180.0f;
-        glVertex3f (-1.0, radius * sin (theta), 0.0);
-        glVertex3f (radius * cos (theta), radius * sin (theta), 0.0f);
+        glVertex3f (-1.0, bird_y + radius * sin (theta), 0.0);
+        glVertex3f (radius * cos (theta), bird_y + radius * sin (theta), 0.0f);
 
         a += step;
         theta = -2.0f * pi * a / 180.0f;
-        glVertex3f (radius * cos (theta), radius * sin (theta), 0.0f);
-        glVertex3f (-1.0, radius * sin (theta), 0.0);
+        glVertex3f (radius * cos (theta), bird_y + radius * sin (theta), 0.0f);
+        glVertex3f (-1.0, bird_y + radius * sin (theta), 0.0);
 
         glEnd ();
     }
 
-    glBegin (GL_QUADS);
 
-    glVertex3f (-1.0, radius, 0.0);
-    glVertex3f (-1.0, 1.0, 0.0);
-    glVertex3f (1.0, 1.0, 0.0);
-    glVertex3f (1.0, radius, 0.0);
+    if (bird_y + radius < 1) {
+        glBegin (GL_QUADS);
 
-    glEnd ();
+        glVertex3f (-1.0, bird_y + radius, 0.0);
+        glVertex3f (-1.0, 1.0, 0.0);
+        glVertex3f (1.0, 1.0, 0.0);
+        glVertex3f (1.0, bird_y + radius, 0.0);
 
-    glBegin (GL_QUADS);
+        glEnd ();
+    }
 
-    glVertex3f (-1.0, -radius, 0.0);
-    glVertex3f (-1.0, -1.0, 0.0);
-    glVertex3f (1.0, -1.0, 0.0);
-    glVertex3f (1.0, -radius, 0.0);
+    if (bird_y - radius > -1) {
 
-    glEnd ();
+        glBegin (GL_QUADS);
+
+        glVertex3f (-1.0, bird_y - radius, 0.0);
+        glVertex3f (-1.0, -1.0, 0.0);
+        glVertex3f (1.0, -1.0, 0.0);
+        glVertex3f (1.0, bird_y - radius, 0.0);
+
+        glEnd ();
+    }
+}
+
+void Map::drawHearts () {
+    double x_pos = -0.94, y_pos = 0.9;
+    for (int i = 1; i <= this->bird.lives; ++i) {
+        this->heart_grid.drawInPosition (std::make_pair (x_pos, y_pos));
+        glLoadIdentity ();
+        x_pos += 0.005 + this->heart_grid.getWidth () * this->heart_grid.getSquareSize ();
+    }
+}
+
+
+void Map::drawPoints () {
+    std::string str = std::to_string (this->overcame_pylons);
+
+    double x_pos = 1 - this->font.get_size (str, 0.07);
+
+    this->font.print_text (str, x_pos, 0.9, 0.07);
 }

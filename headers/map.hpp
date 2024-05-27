@@ -1,9 +1,11 @@
-#pragma once
+#ifndef MAP_CLASS
+#define MAP_CLASS
 
 #include <GL/glut.h>
 #include <vector>
 
 #include "bird.hpp"
+#include "font.hpp"
 #include "generator.hpp"
 
 
@@ -17,11 +19,15 @@ class Map {
 
     double space_size;
 
+    Grid heart_grid;
+
     bool isNight;
 
     unsigned int overcame_pylons; // сколько колонн преодолели
 
-    Map (Bird bird, Generator gen, size_t tick_time) { // конструктор
+    Font font;
+
+    Map (Bird bird, Generator gen, size_t tick_time, Grid heart_grid, Font font) { // конструктор
         this->bird            = bird;
         this->gen             = gen;
         this->tick_time       = tick_time;
@@ -29,7 +35,9 @@ class Map {
         this->overcame_pylons = 0;
         this->space_size =
         this->bird.grid.getHeight () * this->bird.grid.getSquareSize () * 4.5;
-        this->isNight = false;
+        this->isNight    = false;
+        this->heart_grid = heart_grid;
+        this->font       = font;
     }
 
     void update ();        // обновление состояния игры
@@ -42,4 +50,8 @@ class Map {
     void setNightFalse ();
 
     void drawNight ();
+    void drawHearts ();
+    void drawPoints ();
 };
+
+#endif

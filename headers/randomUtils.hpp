@@ -1,3 +1,6 @@
+#ifndef RANDOM_UTILS
+#define RANDOM_UTILS
+
 #include <cstdlib>
 #include <vector>
 
@@ -9,3 +12,6 @@ std::vector<double> randColord ();
 std::vector<float> randColorf ();
 
 int randomChoice (int number, std::vector<int> chances);
+
+
+#endif

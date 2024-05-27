@@ -4,11 +4,10 @@ project(FlappyBird VERSION 0.1.0 LANGUAGES CXX)
 
 set(HEADERS headers)
 set(SOURCES sources)
-set(STB_DIR stb)
 
-set(SOURCE_FILES ${SOURCES}/bird.cpp ${SOURCES}/generator.cpp ${SOURCES}/map.cpp ${SOURCES}/pylon.cpp ${SOURCES}/bonus.cpp ${SOURCES}/grid.cpp)
+set(SOURCE_FILES ${SOURCES}/bird.cpp ${SOURCES}/generator.cpp ${SOURCES}/map.cpp ${SOURCES}/pylon.cpp ${SOURCES}/bonus.cpp ${SOURCES}/grid.cpp ${SOURCES}/font.cpp)
 
-include_directories(${HEADERS} ${STB_DIR})
+include_directories(${HEADERS})
 
 
 set(GLUTILS ${HEADERS}/glUtils.hpp ${SOURCES}/glUtils.cpp)
